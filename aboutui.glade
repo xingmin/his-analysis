@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="2.24"/>
+  <!-- interface-naming-policy project-wide -->
+  <object class="GtkAboutDialog" id="aboutdialog_analysis">
+    <property name="can_focus">False</property>
+    <property name="border_width">5</property>
+    <property name="modal">True</property>
+    <property name="window_position">center-always</property>
+    <property name="destroy_with_parent">True</property>
+    <property name="type_hint">dialog</property>
+    <property name="program_name">医院数据分析</property>
+    <property name="version">1.0</property>
+    <property name="copyright" translatable="yes">版权归临沂市沂水中心医院信息科所有</property>
+    <property name="comments" translatable="yes">欢迎使用本程序，有任何问题请发送
+email:xingminliu@qq.com</property>
+    <property name="authors">Hecate_Eos</property>
+    <child internal-child="vbox">
+      <object class="GtkVBox" id="dialog-vbox1">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkHButtonBox" id="dialog-action_area1">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="layout_style">end</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

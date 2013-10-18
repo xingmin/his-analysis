@@ -1,0 +1,7 @@
+C:\Python26\Lib\site-packages\gtk-2.0\runtime\etc\gtk-2.0\gtkrc
+中添加如下，解决PangoWarning: couldn't load font
+style "user-font"
+{
+    font_name="Simsun 10"
+}
+widget_class "*" style "user-font"
