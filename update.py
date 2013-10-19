@@ -39,6 +39,8 @@ cmdstr=u'''
 #首先更新templates文件夹下的模板
 echo -n "updating templates... "
 git clone --depth 1 %s %s
+find.exe %s/ -name '.*' -print0 | xargs -0 rm -rf
+
 if [[ ! -d templates ]]; then  
     mkdir templates
 fi 
@@ -49,10 +51,12 @@ echo "done."
 echo -n "updating application... "
 cd ..
 git clone --depth 1 %s %s
+find.exe %s/ -name '.*' -print0 | xargs -0 rm -rf
 cp %s/* %s
 rm -rf %s
 cd %s
 echo "done."
-'''%(config.TEMPLATES_REPO, uuid_template, uuid_template, uuid_template, 
-     config.APPLICATION_REPO, uuid_app, curr_path, uuid_app, curr_path)
+'''%(config.TEMPLATES_REPO, uuid_template, uuid_template, uuid_template, uuid_template, 
+     config.APPLICATION_REPO, uuid_app, uuid_app, curr_path, uuid_app, curr_path)
+print cmdstr
 getstatusoutput_my(cmdstr)
