@@ -228,8 +228,10 @@ def cur_file_dir():
     elif os.path.isfile(path):
         return os.path.dirname(path)
 #打印结果
-       
-if __name__ == "__main__":
+
+def run_analysis():
     os.chdir(cur_file_dir())
     analysisui = analysisui()
-    gtk.main()
+    gtk.main()       
+if __name__ == "__main__":
+    run_analysis()
