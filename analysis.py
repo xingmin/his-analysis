@@ -5,9 +5,10 @@ import commands
 import locale
 import gobject
 import threading
+import subprocess
 reload(sys)
 sys.setdefaultencoding('utf-8')
-import chardet;
+import chardet
 import datetime
 
 
@@ -62,7 +63,7 @@ class MyThread(threading.Thread):
             self.execbutton.set_label(self.origin_execbutton_text)
         return False
     def open_output_dir(self, cmd_explorer):
-        os.system(cmd_explorer)
+        subprocess.Popen(cmd_explorer)
         return False
     def run(self):
         gobject.idle_add(self.lock_window, True)
@@ -90,6 +91,13 @@ class analysisui:
                        gtk.BUTTONS_CLOSE, msg)
         md.run()
         md.destroy()
+    def log_cmdstr(self, cmdstr):
+        logfile = open("./analysis.log",'a')
+        logstr = "[%s]%s\r\n" % (datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),cmdstr)
+        logfile.write(logstr)
+        logfile.close()
+        buffer = self.textview_log.get_buffer()
+        buffer.insert( buffer.get_end_iter(),logstr)
     def on_button_exec_analysis_clicked(self, widget, data=None):
         tv = self.treeview.get_treeview()
         tvselected = tv.get_selection().get_selected()
@@ -111,9 +119,7 @@ class analysisui:
         print cmdstr.decode('utf-8')
         cmdstr = cmdstr.replace("\\","/")
         
-        logfile = open("./analysis.log",'a')
-        logfile.write("[%s]%s" % (datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),cmdstr))
-        logfile.close()
+        self.log_cmdstr(cmdstr)
         
         t = MyThread(self.window, self.button_exec_analysis, cmdstr, report_output)
         t.start()
@@ -175,6 +181,8 @@ class analysisui:
         self.add_filters_to_file_chooser(self.dataset_chooser)
         
         self.init_fcd_analysis_output(builder)
+        
+        self.textview_log = builder.get_object("textview_log")
 
         self.treeview = TemplateTreeView(builder)
         self.aboutui = None
@@ -231,7 +239,7 @@ def cur_file_dir():
 
 def run_analysis():
     os.chdir(cur_file_dir())
-    analysisui = analysisui()
-    gtk.main()       
+    analysisui()
+    gtk.main()
 if __name__ == "__main__":
     run_analysis()

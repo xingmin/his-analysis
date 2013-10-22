@@ -1,42 +1,48 @@
 # -*- coding: utf-8-*-
-import uuid
-import config
-import sys, os
-import chardet
-#获取脚本文件的当前路径
-def cur_file_dir():
-    #获取脚本路径
-    path = sys.path[0]
-    #判断为脚本文件还是py2exe编译后的文件，如果是脚本文件，则返回的是脚本的目录，如果是py2exe编译后的文件，则返回的是编译后的文件路径
-    if os.path.isdir(path):
-        return path
-    elif os.path.isfile(path):
-        return os.path.dirname(path)
-#打印结果
+import os,sys
+import gtk
+import gobject
+import threading
+import time
+reload(sys)
+sys.setdefaultencoding('utf-8')
+gobject.threads_init()
+class UpdateThread(threading.Thread):
+    def __init__(self, win):
+        super(UpdateThread, self).__init__()
+        self.win = win
 
-def getstatusoutput_my(cmd): 
-    """Return (status, output) of executing cmd in a shell."""
-    """This new implementation should work on all platforms."""
-    import subprocess
-    reload(sys)  
-    sys.setdefaultencoding('utf-8') 
-
-    pipe = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True, universal_newlines=True) 
-#     output = u''.join(pipe.stdout.readlines()) 
-    output=u''
-    for line in pipe.stdout:
-        end = chardet.detect(line)['encoding']
-        if end=='utf-8' or end =='ascii':
-            output= output+ line.decode('utf-8')
-        elif end=='GB2312':
-            output= output+ line.decode('cp936')
-    sts = pipe.returncode
-    if sts is None: sts = 0
-    return sts, output
-uuid_template = uuid.uuid1()
-uuid_app = uuid.uuid1()
-curr_path = cur_file_dir()
-cmdstr=u"./update.sh -a %s -b %s -p %s -t %s" %(config.APPLICATION_REPO, config.TEMPLATES_REPO, uuid_app, uuid_template)
-cmdstr = "sh --login -c \"%s\"" % cmdstr
-print cmdstr
-getstatusoutput_my(cmdstr)
+    def complete_update(self):
+        self.win.emit('destroy')
+        return False
+    def run(self):
+        time.sleep(5)
+        #import update-core
+        gobject.idle_add(self.complete_update)
+class UpdateUI: 
+    def __init__(self):
+        builder = gtk.Builder()
+        builder.add_from_file("updateui.glade")
+        #self.win=builder.get_object("dialog1")
+        self.win=builder.get_object("window_update")
+        self.progressbar1=builder.get_object("progressbar1")
+        builder.connect_signals(self)
+        self.timeout_id = gobject.timeout_add(160, self.on_timeout, None)
+    def on_window_update_show(self, widget, data=None):
+        ut = UpdateThread(self.win)
+        ut.start()
+    def on_window_update_destroy(self, widget, data=None):
+        gtk.main_quit()
+        #print 'destroying'
+    def on_timeout(self, user_data):
+        self.progressbar1.pulse()
+        return True
+    def run(self):
+#         self.win.run()
+#         self.win.destroy()
+        self.win.show()
+        gtk.main()
+    
+if __name__ == "__main__":
+    upui = UpdateUI()
+    upui.run()

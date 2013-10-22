@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="2.24"/>
+  <!-- interface-naming-policy project-wide -->
+  <object class="GtkWindow" id="window_update">
+    <property name="width_request">350</property>
+    <property name="height_request">140</property>
+    <property name="can_focus">False</property>
+    <property name="title" translatable="yes">程序更新中...</property>
+    <property name="resizable">False</property>
+    <property name="modal">True</property>
+    <property name="window_position">center-always</property>
+    <property name="type_hint">dialog</property>
+    <property name="deletable">False</property>
+    <property name="opacity">0.96999999999999997</property>
+    <signal name="destroy" handler="on_window_update_destroy" swapped="no"/>
+    <signal name="show" handler="on_window_update_show" swapped="no"/>
+    <child>
+      <object class="GtkFixed" id="fixed1">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <child>
+          <object class="GtkProgressBar" id="progressbar1">
+            <property name="width_request">344</property>
+            <property name="height_request">30</property>
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="activity_mode">True</property>
+            <property name="fraction">0.20999999999999999</property>
+          </object>
+          <packing>
+            <property name="x">3</property>
+            <property name="y">60</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="label1">
+            <property name="width_request">163</property>
+            <property name="height_request">26</property>
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">正在检查更新，请稍后...</property>
+          </object>
+          <packing>
+            <property name="x">3</property>
+            <property name="y">15</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
